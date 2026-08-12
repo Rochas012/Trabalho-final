@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import productRoutes from "./routes/Productroutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import saleRoutes from "./routes/saleRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import connectDatabase from "./database/connection.js";
 
 import dns from "node:dns";
@@ -26,16 +27,13 @@ console.log("ESTE É O SERVER DA TECHSTORE / ESTOQUE");
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/sales", saleRoutes);
+app.use("/api/auth", authRoutes);   // ← esta linha é importante
 
 // Rotas de teste
 app.get("/", (req, res) => {
   res.json({
     message: "API do Sistema de Estoque e Vendas está funcionando!"
   });
-});
-
-app.get("/teste", (req, res) => {
-  res.send("Servidor de teste funcionando!");
 });
 
 app.listen(PORT, () => {

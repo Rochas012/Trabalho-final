@@ -1,29 +1,29 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Nome é obrigatório'],
+    required: [true, "Nome é obrigatório"],
     trim: true
   },
   email: {
     type: String,
-    required: [true, 'E-mail é obrigatório'],
+    required: [true, "E-mail é obrigatório"],
     unique: true,
     lowercase: true,
     trim: true
   },
   password: {
     type: String,
-    required: [true, 'Senha é obrigatória'],
+    required: [true, "Senha é obrigatória"],
     minlength: 6,
-    select: false // não retorna a senha nas consultas
+    select: false
   },
   role: {
     type: String,
-    enum: ['admin', 'funcionario'],
-    default: 'funcionario'
+    enum: ["admin", "funcionario"],
+    default: "funcionario"
   },
   active: {
     type: Boolean,
@@ -33,11 +33,10 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Criptografa a senha antes de salvar
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+// Criptografa a senha antes de salvar (versão corrigida)
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 // Método para comparar senha
@@ -45,4 +44,4 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model("User", userSchema);
